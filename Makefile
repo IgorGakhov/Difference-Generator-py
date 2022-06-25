@@ -4,6 +4,10 @@ install:
 lint:
 	poetry run flake8 gendiff
 
+test:
+	poetry run pytest -s
+	poetry run pytest --cov=.
+
 build:
 	poetry build
 
@@ -15,3 +19,13 @@ package-install:
 
 package-force-reinstall:
 	python3 -m pip install --user --force-reinstall dist/*.whl
+
+fast-check:
+	echo "\n\n\n ! Build process...\n"
+	make build
+	echo "\n\n\n ! Package-force-reinstall process...\n"
+	make package-force-reinstall
+	echo "\n\n\n ! Lint checkup process...\n"
+	make lint
+	echo "\n\n\n ! Test checkup process...\n"
+	make test
