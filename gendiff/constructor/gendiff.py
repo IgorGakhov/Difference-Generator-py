@@ -1,24 +1,11 @@
-import json
+from gendiff.constructor.data_parser import get_data
+
 
 DIFFLINE_TEMPLATE = '  {} {}: {}'
 
 
-def get_data_from_json(json_file):
-    file = json.load(json_file)
-    for key in file:
-        value = file.get(key)
-        if type(value) is bool:
-            file[key] = str(value).lower()
-        if value is None:
-            file[key] = 'null'
-
-    return file
-
-
 def generate_diff(file_path1, file_path2):
-    with open(file_path1) as file1, open(file_path2) as file2:
-        file1 = get_data_from_json(file1)
-        file2 = get_data_from_json(file2)
+    file1, file2 = get_data(file_path1), get_data(file_path2)
 
     keys_1, keys_2 = set(file1.keys()), set(file2.keys())
     removed_keys = keys_1 - keys_2

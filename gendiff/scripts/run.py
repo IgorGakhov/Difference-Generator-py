@@ -1,5 +1,7 @@
+# !usr/bin/env python3
+
 from gendiff.cli import parse_arguments
-from gendiff.scripts.gendiff import generate_diff
+from gendiff.constructor.gendiff import generate_diff
 
 
 def main():

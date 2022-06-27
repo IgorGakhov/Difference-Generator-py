@@ -8,10 +8,11 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-gendiff = "gendiff.engine.run:main"
+gendiff = "gendiff.scripts.run:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+PyYAML = "^6.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
