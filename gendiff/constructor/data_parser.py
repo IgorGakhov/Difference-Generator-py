@@ -3,11 +3,7 @@ import json
 import yaml
 
 
-TYPE_JSON = '.json'
-TYPE_YML_OR_YAML = ('.yml', '.yaml')
-
-UNSUPPORTED_FORMAT = '''Extension "{}" is not supported.
-Use JSON or YML/YAML format'''
+from gendiff.constants import TYPE_JSON, TYPE_YML_OR_YAML, UNSUPPORTED_TYPE
 
 
 def load_data(file_path, file_extension):
@@ -17,7 +13,7 @@ def load_data(file_path, file_extension):
         elif file_extension in TYPE_YML_OR_YAML:
             data = yaml.load(file, Loader=yaml.FullLoader)
         else:
-            raise ValueError(UNSUPPORTED_FORMAT.format(file_extension))
+            raise ValueError(UNSUPPORTED_TYPE.format(file_extension))
 
     return data
 
