@@ -20,7 +20,29 @@ def check_nesting(value):
             check_nesting(value[nested_key]['value'])
 
 
-def get_diff_tree(data1, data2):  # noqa: C901
+def add_key(key, value, status, tree):
+    if status is not UPDATED:
+        tree[key] = {
+            'value': value,
+            'status': status
+        }
+        if isinstance(value, dict) and status is not NESTED:
+            check_nesting(value)
+    else:
+        tree[key] = {
+            'value': {
+                'old': value[0],
+                'new': value[1],
+            },
+            'status': UPDATED
+        }
+        if isinstance(value[0], dict):
+            check_nesting(value[0])
+        if isinstance(value[1], dict):
+            check_nesting(value[1])
+
+
+def get_diff_tree(data1, data2):
 
     all_keys, added_keys, removed_keys = calculate_diff_sets(data1, data2)
 
@@ -28,41 +50,19 @@ def get_diff_tree(data1, data2):  # noqa: C901
     for key in all_keys:
 
         if key in removed_keys:
-            diff_tree[key] = {
-                'value': data1[key],
-                'status': REMOVED
-            }
-            check_nesting(diff_tree[key]['value'])
+            add_key(key, data1[key], REMOVED, diff_tree)
 
         elif key in added_keys:
-            diff_tree[key] = {
-                'value': data2[key],
-                'status': ADDED
-            }
-            check_nesting(diff_tree[key]['value'])
+            add_key(key, data2[key], ADDED, diff_tree)
 
         elif data1[key] == data2[key]:
-            diff_tree[key] = {
-                'value': data1[key],
-                'status': UNCHANGED
-            }
-            check_nesting(diff_tree[key]['value'])
+            add_key(key, data1[key], UNCHANGED, diff_tree)
 
         elif isinstance(data1[key], dict) and isinstance(data2[key], dict):
-            diff_tree[key] = {
-                'value': get_diff_tree(data1[key], data2[key]),
-                'status': NESTED
-            }
+            add_key(key, get_diff_tree(
+                data1[key], data2[key]), NESTED, diff_tree)
 
         else:
-            diff_tree[key] = {
-                'value': {
-                    'old': data1[key],
-                    'new': data2[key],
-                },
-                'status': UPDATED
-            }
-            check_nesting(diff_tree[key]['value']['old'])
-            check_nesting(diff_tree[key]['value']['new'])
+            add_key(key, [data1[key], data2[key]], UPDATED, diff_tree)
 
     return diff_tree
