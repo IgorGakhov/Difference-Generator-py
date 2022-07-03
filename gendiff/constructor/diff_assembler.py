@@ -1,13 +1,34 @@
 from gendiff.constants import REMOVED, ADDED, UNCHANGED, UPDATED, NESTED
 
 
-def calculate_diff_sets(data1, data2):
-    keys_1, keys_2 = set(data1.keys()), set(data2.keys())
-    removed_keys = keys_1 - keys_2
-    added_keys = keys_2 - keys_1
-    all_keys = sorted(keys_1 | keys_2)
+def add_key(key, value, status, tree):
+    if status is not UPDATED:
+        add_unupdated_key(key, value, status, tree)
+    else:
+        add_updated_key(key, value, tree)
 
-    return all_keys, added_keys, removed_keys
+
+def add_unupdated_key(key, value, status, tree):
+    tree[key] = {
+        'value': value,
+        'status': status
+    }
+    if isinstance(value, dict) and status is not NESTED:
+        check_nesting(value)
+
+
+def add_updated_key(key, value, tree):
+    tree[key] = {
+        'value': {
+            'old': value[0],
+            'new': value[1],
+        },
+        'status': UPDATED
+    }
+    if isinstance(value[0], dict):
+        check_nesting(value[0])
+    if isinstance(value[1], dict):
+        check_nesting(value[1])
 
 
 def check_nesting(value):
@@ -20,39 +41,17 @@ def check_nesting(value):
             check_nesting(value[nested_key]['value'])
 
 
-def add_key(key, value, status, tree):
-    if status is not UPDATED:
-        tree[key] = {
-            'value': value,
-            'status': status
-        }
-        if isinstance(value, dict) and status is not NESTED:
-            check_nesting(value)
-    else:
-        tree[key] = {
-            'value': {
-                'old': value[0],
-                'new': value[1],
-            },
-            'status': UPDATED
-        }
-        if isinstance(value[0], dict):
-            check_nesting(value[0])
-        if isinstance(value[1], dict):
-            check_nesting(value[1])
-
-
 def get_diff_tree(data1, data2):
 
-    all_keys, added_keys, removed_keys = calculate_diff_sets(data1, data2)
+    dataset_1, dataset_2 = set(data1.keys()), set(data2.keys())
 
     diff_tree = {}
-    for key in all_keys:
+    for key in sorted(dataset_1 | dataset_2):
 
-        if key in removed_keys:
+        if key in dataset_1 - dataset_2:
             add_key(key, data1[key], REMOVED, diff_tree)
 
-        elif key in added_keys:
+        elif key in dataset_2 - dataset_1:
             add_key(key, data2[key], ADDED, diff_tree)
 
         elif data1[key] == data2[key]:
