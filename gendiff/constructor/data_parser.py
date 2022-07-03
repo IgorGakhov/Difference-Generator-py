@@ -25,6 +25,8 @@ def validate_data(data):
             data[key] = str(value).lower()
         if value is None:
             data[key] = 'null'
+        if isinstance(value, dict):
+            validate_data(value)
 
     return data
 

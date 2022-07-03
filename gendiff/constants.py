@@ -18,3 +18,5 @@ UPDATED = 'updated'
 NESTED = 'nested'
 
 DIFFLINE_TEMPLATE_STYLISH = '{}  {} {}: {}'
+ENDLINE_TEMPLATE_STYLISH = '{}    {}'
+NESTING_INDENTATION = 4
