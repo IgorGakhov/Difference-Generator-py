@@ -11,12 +11,12 @@ def calculate_diff_sets(data1, data2):
 
 
 def check_nesting(value):
-    if isinstance(value, dict):
-        for nested_key in value.keys():
-            value[nested_key] = {
-                'value': value[nested_key],
-                'status': NESTED
-            }
+    for nested_key in value.keys():
+        value[nested_key] = {
+            'value': value[nested_key],
+            'status': NESTED
+        }
+        if isinstance(value[nested_key]['value'], dict):
             check_nesting(value[nested_key]['value'])
 
 
