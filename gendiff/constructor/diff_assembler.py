@@ -34,7 +34,7 @@ def add_updated_key(key, value, tree):
 def check_nesting(value):
     for nested_key in value.keys():
         value[nested_key] = {
-            'value': value[nested_key],
+            'value': value.get(nested_key),
             'status': NESTED
         }
         if isinstance(value[nested_key]['value'], dict):

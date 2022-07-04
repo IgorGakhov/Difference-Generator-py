@@ -1,5 +1,9 @@
 from gendiff.constants import REMOVED, ADDED, UNCHANGED, UPDATED, NESTED
-from gendiff.constants import DIFFLINE_TEMPLATE_STYLISH, ENDLINE_TEMPLATE_STYLISH, NESTING_INDENTATION  # noqa: E501
+from gendiff.constants import (
+    DIFFLINE_TEMPLATE_STYLISH,
+    ENDLINE_TEMPLATE_STYLISH,
+    NESTING_INDENTATION
+)
 
 
 def compose_line(indent, diff_symbol, key, value):

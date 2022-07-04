@@ -2,7 +2,11 @@ import pytest
 
 
 from gendiff.constructor.gendiff import generate_diff
-from gendiff.constants import UNSUPPORTED_FORMAT
+from gendiff.constants import (
+    FORMAT_STYLISH,
+    FORMAT_PLAIN,
+    UNSUPPORTED_FORMAT
+)
 
 
 FLAT_JSON1 = 'tests/fixtures/diff_requests/file1.json'
@@ -20,20 +24,28 @@ NESTED_YML2 = 'tests/fixtures/diff_requests/file4.yml'
 
 RESPONSE_STYLISH_FLAT = 'tests/fixtures/diff_responses/stylish_flat.txt'
 RESPONSE_STYLISH_NESTED = 'tests/fixtures/diff_responses/stylish_nested.txt'
+RESPONSE_PLAIN_FLAT = 'tests/fixtures/diff_responses/plain_flat.txt'
+RESPONSE_PLAIN_NESTED = 'tests/fixtures/diff_responses/plain_nested.txt'
 
 
-@pytest.mark.parametrize('file1, file2, response_file_path', [
-    (FLAT_JSON1, FLAT_JSON2, RESPONSE_STYLISH_FLAT),
-    (FLAT_YAML1, FLAT_YAML2, RESPONSE_STYLISH_FLAT),
-    (FLAT_YML1, FLAT_YML2, RESPONSE_STYLISH_FLAT),
-    (NESTED_JSON1, NESTED_JSON2, RESPONSE_STYLISH_NESTED),
-    (NESTED_YAML1, NESTED_YAML2, RESPONSE_STYLISH_NESTED),
-    (NESTED_YML1, NESTED_YML2, RESPONSE_STYLISH_NESTED)
+@pytest.mark.parametrize('file1, file2, format, response_file_path', [
+    (FLAT_JSON1, FLAT_JSON2, FORMAT_STYLISH, RESPONSE_STYLISH_FLAT),
+    (FLAT_YAML1, FLAT_YAML2, FORMAT_STYLISH, RESPONSE_STYLISH_FLAT),
+    (FLAT_YML1, FLAT_YML2, FORMAT_STYLISH, RESPONSE_STYLISH_FLAT),
+    (NESTED_JSON1, NESTED_JSON2, FORMAT_STYLISH, RESPONSE_STYLISH_NESTED),
+    (NESTED_YAML1, NESTED_YAML2, FORMAT_STYLISH, RESPONSE_STYLISH_NESTED),
+    (NESTED_YML1, NESTED_YML2, FORMAT_STYLISH, RESPONSE_STYLISH_NESTED),
+    (FLAT_JSON1, FLAT_JSON2, FORMAT_PLAIN, RESPONSE_PLAIN_FLAT),
+    (FLAT_YAML1, FLAT_YAML2, FORMAT_PLAIN, RESPONSE_PLAIN_FLAT),
+    (FLAT_YML1, FLAT_YML2, FORMAT_PLAIN, RESPONSE_PLAIN_FLAT),
+    (NESTED_JSON1, NESTED_JSON2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED),
+    (NESTED_YAML1, NESTED_YAML2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED),
+    (NESTED_YML1, NESTED_YML2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED)
 ])
-def test_generate_diff(file1, file2, response_file_path):
+def test_generate_diff(file1, file2, format, response_file_path):
     with open(response_file_path) as file:
         expected_result = file.read()
-    assert expected_result == generate_diff(file1, file2)
+    assert expected_result == generate_diff(file1, file2, format)
 
 
 @pytest.fixture
