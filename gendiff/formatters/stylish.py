@@ -6,12 +6,45 @@ from gendiff.constants import (
 )
 
 
-def compose_line(indent, diff_symbol, key, value):
+def compose_line(indent: str, diff_symbol: str, key, value) -> str:
+    """
+    Description:
+    ---
+        Filling the String Template with Data.
+
+    Parameters:
+    ---
+        - indent (str): Indent before insignia.
+        - diff_symbol (str): Insignia to form a string.
+        - key (Any): Key to be added to the tree.
+        - value (Any): Assignable value.
+
+    Return:
+    ---
+        Generated string to output (str).
+    """
     return DIFFLINE_TEMPLATE_STYLISH.format(
         indent, diff_symbol, key, value)
 
 
-def render_key_level(key, value, diff_symbol, diff_depth, result):
+def render_key_level(key, value, diff_symbol: str, diff_depth: int, result: list):  # noqa: E501
+    """
+    Description:
+    ---
+        Implements a string representation of a key and its value.
+
+    Parameters:
+    ---
+        - key (Any): Key to be added to the tree.
+        - value (Any): Assignable value.
+        - diff_symbol (str): Insignia to form a string.
+        - diff_depth (int): Indentation value for a line.
+        - result (list): Initial result of aggregation.
+
+    Return:
+    ---
+        Calling the compose_line() function.
+    """
     indent = diff_depth * ' '
     if isinstance(value, dict):
         result.append(compose_line(indent, diff_symbol, key, '{'))
@@ -21,8 +54,23 @@ def render_key_level(key, value, diff_symbol, diff_depth, result):
         result.append(compose_line(indent, diff_symbol, key, value))
 
 
-def render_stylish(diff_tree, diff_depth=0, result=None):
+def render_stylish(diff_tree: dict, diff_depth: int = 0, result=None) -> str:
+    """
+    Description:
+    ---
+        Rendering the diff tree to stylish format.
 
+    Parameters:
+    ---
+        - diff_tree (dict): The difference tree.
+
+        - diff_depth (int): Indentation value for a line (default: 0).
+        - result (list): Initial result of aggregation (default: None).
+
+    Return:
+    ---
+        String visualization of a tree in stylish format.
+    """
     result = [] if result is None else result
     for key in diff_tree:
         value = diff_tree[key].get('value')

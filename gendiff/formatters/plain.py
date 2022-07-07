@@ -7,13 +7,40 @@ from gendiff.constants import (
 )
 
 
-def get_path(key, parent):
+def get_path(key, parent: str) -> str:
+    """
+    Description:
+    ---
+        Get element path starting from parent.
+
+    Parameters:
+    ---
+        - key (Any): The key for which the path is considered.
+        - parent (str): The path of the changed value from the parent.
+
+    Return:
+    ---
+        parent (str): Updated element path from parent.
+    """
     if parent:
         return parent + f'.{key}'
     return f'{key}'
 
 
-def handle_value(value):
+def handle_value(value) -> str:
+    """
+    Description:
+    ---
+        Processes the key value to represent in a string.
+
+    Parameters:
+    ---
+        - value (Any): Assignable value.
+
+    Return:
+    ---
+        Processed value (str).
+    """
     if value in ('true', 'false', 'null'):
         return value
     if isinstance(value, dict):
@@ -22,8 +49,24 @@ def handle_value(value):
         return f"'{value}'"
 
 
-def render_plain(diff_tree, parent='', result=None):
+def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
+    """
+    Description:
+    ---
+        Rendering the diff tree to plain format.
 
+    Parameters:
+    ---
+        - diff_tree (dict): The difference tree.
+
+        - parent (str): The path of the changed value
+        from the parent (default: '').
+        - result (list): Initial result of aggregation (default: None).
+
+    Return:
+    ---
+        String visualization of a tree in plain format.
+    """
     result = [] if result is None else result
     for key in diff_tree:
         value = diff_tree[key].get('value')

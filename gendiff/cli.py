@@ -4,7 +4,23 @@ import argparse
 from gendiff.constants import FORMATS, DEFAULT_FORMAT
 
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
+    """
+    Description:
+    ---
+        Parses the data entered in the console to run the program.
+
+    Parameters:
+    ---
+        - first_file (str): First file for comparison.
+        - second_file (str): Second file for comparison.
+
+        - format (str): Format for comparison (default: stylish).
+
+    Return:
+    ---
+        args (Namespace): Entered values.
+    """
     parser = argparse.ArgumentParser(
         description='Compares two configuration files and shows a difference.')
 

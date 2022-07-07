@@ -6,7 +6,25 @@ import yaml
 from gendiff.constants import TYPE_JSON, TYPE_YML_OR_YAML, UNSUPPORTED_TYPE
 
 
-def load_data(file_path, file_extension):
+def load_data(file_path: str, file_extension: str) -> dict:
+    """
+    Description:
+    ---
+        File Downloader.
+
+    Parameters:
+    ---
+        - file_path (str): Path to file (absolute or relative).
+        - file_extension (str): File extension.
+
+    Raises:
+    ---
+        ValueError: Unsupported file extension.
+
+    Return:
+    ---
+        data (dict): Data in the form of a Python dictionary.
+    """
     with open(file_path) as file:
         if file_extension == TYPE_JSON:
             data = json.load(file)
@@ -18,22 +36,22 @@ def load_data(file_path, file_extension):
     return data
 
 
-def validate_data(data):
-    for key in data:
-        value = data.get(key)
-        if type(value) is bool:
-            data[key] = str(value).lower()
-        if value is None:
-            data[key] = 'null'
-        if isinstance(value, dict):
-            validate_data(value)
+def get_data(file_path: str) -> dict:
+    """
+    Description:
+    ---
+        Processes the file path and returns the data as a Python dictionary.
 
-    return data
+    Parameters:
+    ---
+        - file_path (str): Path to file (absolute or relative).
 
-
-def get_data(file_path):
+    Return:
+    ---
+        data (dict): Data in the form of a Python dictionary.
+    """
     _, file_extension = path.splitext(file_path)
     file_extension = file_extension.lower()
-    data = validate_data(load_data(file_path, file_extension))
+    data = load_data(file_path, file_extension)
 
     return data

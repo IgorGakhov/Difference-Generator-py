@@ -5,6 +5,7 @@ from gendiff.constructor.gendiff import generate_diff
 from gendiff.constants import (
     FORMAT_STYLISH,
     FORMAT_PLAIN,
+    FORMAT_JSON,
     UNSUPPORTED_FORMAT
 )
 
@@ -26,6 +27,8 @@ RESPONSE_STYLISH_FLAT = 'tests/fixtures/diff_responses/stylish_flat.txt'
 RESPONSE_STYLISH_NESTED = 'tests/fixtures/diff_responses/stylish_nested.txt'
 RESPONSE_PLAIN_FLAT = 'tests/fixtures/diff_responses/plain_flat.txt'
 RESPONSE_PLAIN_NESTED = 'tests/fixtures/diff_responses/plain_nested.txt'
+RESPONSE_JSON_FLAT = 'tests/fixtures/diff_responses/json_flat.txt'
+RESPONSE_JSON_NESTED = 'tests/fixtures/diff_responses/json_nested.txt'
 
 
 @pytest.mark.parametrize('file1, file2, format, response_file_path', [
@@ -40,7 +43,13 @@ RESPONSE_PLAIN_NESTED = 'tests/fixtures/diff_responses/plain_nested.txt'
     (FLAT_YML1, FLAT_YML2, FORMAT_PLAIN, RESPONSE_PLAIN_FLAT),
     (NESTED_JSON1, NESTED_JSON2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED),
     (NESTED_YAML1, NESTED_YAML2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED),
-    (NESTED_YML1, NESTED_YML2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED)
+    (NESTED_YML1, NESTED_YML2, FORMAT_PLAIN, RESPONSE_PLAIN_NESTED),
+    (FLAT_JSON1, FLAT_JSON2, FORMAT_JSON, RESPONSE_JSON_FLAT),
+    (FLAT_YAML1, FLAT_YAML2, FORMAT_JSON, RESPONSE_JSON_FLAT),
+    (FLAT_YML1, FLAT_YML2, FORMAT_JSON, RESPONSE_JSON_FLAT),
+    (NESTED_JSON1, NESTED_JSON2, FORMAT_JSON, RESPONSE_JSON_NESTED),
+    (NESTED_YAML1, NESTED_YAML2, FORMAT_JSON, RESPONSE_JSON_NESTED),
+    (NESTED_YML1, NESTED_YML2, FORMAT_JSON, RESPONSE_JSON_NESTED)
 ])
 def test_generate_diff(file1, file2, format, response_file_path):
     with open(response_file_path) as file:
