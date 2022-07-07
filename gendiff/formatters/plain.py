@@ -43,6 +43,8 @@ def handle_value(value) -> str:
     """
     if value in ('true', 'false', 'null'):
         return value
+    if isinstance(value, int):
+        return str(value)
     if isinstance(value, dict):
         return COMPLEX_VALUE
     else:
