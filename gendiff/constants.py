@@ -6,6 +6,10 @@ Use JSON or YML/YAML format'''
 FORMAT_STYLISH = 'stylish'
 FORMAT_PLAIN = 'plain'
 FORMAT_JSON = 'json'
+FILEREAD_ERR = '''Failed to open file '{}'.
+Please, check that the file path is entered correctly.'''
+INVALID_FILE = '''This file is not valid.
+Please, make sure the file is filled in correctly.'''
 UNSUPPORTED_FORMAT = '''Format is not supported.
 Use STYLISH, PLAIN or JSON format'''
 DEFAULT_FORMAT = FORMAT_STYLISH

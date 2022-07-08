@@ -2,11 +2,10 @@ import pytest
 
 
 from gendiff.constructor.gendiff import generate_diff
+from gendiff.constructor.data_parser import open_file, load_json, load_yaml
 from gendiff.constants import (
-    FORMAT_STYLISH,
-    FORMAT_PLAIN,
-    FORMAT_JSON,
-    UNSUPPORTED_FORMAT
+    FORMAT_STYLISH, FORMAT_PLAIN, FORMAT_JSON,
+    FILEREAD_ERR, UNSUPPORTED_TYPE, INVALID_FILE, UNSUPPORTED_FORMAT
 )
 
 
@@ -57,20 +56,35 @@ def test_generate_diff(file1, file2, format, response_file_path):
     assert expected_result == generate_diff(file1, file2, format)
 
 
-@pytest.fixture
-def value_error_txt():
-    return '''Extension ".txt" is not supported.
-Use JSON or YML/YAML format'''
+def test_open_file_fail():
+    with pytest.raises(RuntimeError) as pytest_error:
+        open_file('wrong file path')
+    assert pytest_error.type == RuntimeError
+    assert str(pytest_error.value) == FILEREAD_ERR.format('wrong file path')
 
 
-def test_usupported_file_format(value_error_txt):
+def test_unsupported_file_format():
     with pytest.raises(ValueError) as pytest_error:
         generate_diff(RESPONSE_STYLISH_FLAT, RESPONSE_STYLISH_NESTED)
     assert pytest_error.type == ValueError
-    assert str(pytest_error.value) == value_error_txt
+    assert str(pytest_error.value) == UNSUPPORTED_TYPE.format('.txt')
 
 
-def test_usupported_render_format():
+def test_load_json_err():
+    with pytest.raises(RuntimeError) as pytest_error:
+        load_json('{"host": "hexlet.io",""}')
+    assert pytest_error.type == RuntimeError
+    assert str(pytest_error.value) == INVALID_FILE
+
+
+def test_load_yaml_err():
+    with pytest.raises(RuntimeError) as pytest_error:
+        load_yaml('host: "hexlet.io":')
+    assert pytest_error.type == RuntimeError
+    assert str(pytest_error.value) == INVALID_FILE
+
+
+def test_unsupported_render_format():
     with pytest.raises(ValueError) as pytest_error:
         generate_diff(FLAT_JSON1, FLAT_JSON2, 'wrong format')
     assert pytest_error.type == ValueError
