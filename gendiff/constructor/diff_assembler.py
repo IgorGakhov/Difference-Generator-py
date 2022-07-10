@@ -1,94 +1,102 @@
-from gendiff.constants import REMOVED, ADDED, UNCHANGED, UPDATED, NESTED
+from typing import Any
 
 
-def add_key(key, value, status: str, tree: dict):
+from gendiff.constants import (
+    REMOVED, ADDED, UNCHANGED, UPDATED, NESTED, CHILD
+)
+
+
+def generate_setmap(data1: dict, data2: dict) -> dict:
     """
     Description:
     ---
-        Adds a key from the union set to the diff tree.\n
-        Uses add_unupdated_key and add_updated_key
-        in itself depending on status.
+        Processes data from dictionaries and generates sets
+        of key intersections.
 
     Parameters:
     ---
-        - key (Any): Key to be added to the tree.
-        - value (Any): Assignable value.
-        - status (str): Assignable status.
-        - tree (dict): The tree to which the change is being made.
-    """
-    if status is not UPDATED:
-        add_unupdated_key(key, value, status, tree)
-    else:
-        add_updated_key(key, value, tree)
-
-
-def add_unupdated_key(key, value, status: str, tree: dict):
-    """
-    Description:
-    ---
-        Adds unupdated key from the union set to the diff tree.
-
-    Parameters:
-    ---
-        - key (Any): Key to be added to the tree.
-        - value (Any): Assignable value.
-        - status (str): Assignable status.
-        - tree (dict): The tree to which the change is being made.
-    """
-    tree[key] = {
-        'value': value,
-        'status': status
-    }
-    if isinstance(value, dict) and status is not NESTED:
-        check_nesting(value)
-
-
-def add_updated_key(key, value, tree: dict):
-    """
-    Description:
-    ---
-        Adds updated key from the union set to the diff tree.
-
-    Parameters:
-    ---
-        - key (Any): Key to be added to the tree.
-        - value (Any): Assignable value.
-        - tree (dict): The tree to which the change is being made.
-    """
-    tree[key] = {
-        'value': {
-            'old': value[0],
-            'new': value[1],
-        },
-        'status': UPDATED
-    }
-    if isinstance(value[0], dict):
-        check_nesting(value[0])
-    if isinstance(value[1], dict):
-        check_nesting(value[1])
-
-
-def check_nesting(value):
-    """
-    Description:
-    ---
-        Assigns value and status to nested values.
-
-    Parameters:
-    ---
-        - value (Any): Meaning for recursive processing.
+        - data1 (dict): Data of the first file as a Python dictionary.
+        - data2 (dict): Data of the second file as a Python dictionary.
 
     Return:
     ---
-        Processed nested elements for value.
+        setmap (dict): Sets dictionary of key intersections.
     """
-    for nested_key in value.keys():
-        value[nested_key] = {
-            'value': value.get(nested_key),
-            'status': NESTED
+    dataset_1, dataset_2 = set(data1.keys()), set(data2.keys())
+
+    return {
+        'removed_keys': dataset_1 - dataset_2,
+        'added_keys': dataset_2 - dataset_1,
+        'all_keys': sorted(dataset_1 | dataset_2)
+    }
+
+
+def add_node(status: str, value: Any, old_value: Any = None) -> dict:
+    """
+    Description:
+    ---
+        Adds data about the key (node) from the combined set to pass
+        to the difference tree.
+
+    Parameters:
+    ---
+        - status (str): Assignable status.
+        - value (Any): Assignable value.
+
+        - old_value (Any): Assignable old value (default: None).
+
+    Return:
+    ---
+        node (dict): Data dictionary about the key (values and status).
+    """
+    if status == UPDATED:
+
+        node = {
+            'value': {
+                'old': old_value,
+                'new': value
+            },
+            'status': status
         }
-        if isinstance(value[nested_key]['value'], dict):
-            check_nesting(value[nested_key]['value'])
+
+        if isinstance(old_value, dict):
+            node['value']['old'] = identify_child(node['value']['old'])
+
+    else:
+
+        node = {
+            'value': value,
+            'status': status
+        }
+
+    if isinstance(value, dict) and status != NESTED:
+        if status == UPDATED:
+            node['value']['new'] = identify_child(node['value']['new'])
+        else:
+            node['value'] = identify_child(node['value'])
+
+    return node
+
+
+def identify_child(value: dict) -> dict:
+    """
+    Description:
+    ---
+        Assigns values and status to children elements.
+
+    Parameters:
+    ---
+        - value (dict): Meaning for recursive processing.
+
+    Return:
+    ---
+        child (dict): Processed nested elements for value.
+    """
+    child = {}
+    for nested_key in value.keys():
+        child[nested_key] = add_node(CHILD, value.get(nested_key))
+
+    return child
 
 
 def get_diff_tree(data1: dict, data2: dict) -> dict:
@@ -99,33 +107,32 @@ def get_diff_tree(data1: dict, data2: dict) -> dict:
 
     Parameters:
     ---
-        - data1 (str): Data of the first file as a Python dictionary.
-        - data2 (str): Data of the second file as a Python dictionary.
+        - data1 (dict): Data of the first file as a Python dictionary.
+        - data2 (dict): Data of the second file as a Python dictionary.
 
     Return:
     ---
         diff_tree (dict): The difference tree of the first file (data1)
         and the second file (data2).
     """
-    dataset_1, dataset_2 = set(data1.keys()), set(data2.keys())
+    setmap = generate_setmap(data1, data2)
 
     diff_tree = {}
-    for key in sorted(dataset_1 | dataset_2):
+    for key in setmap['all_keys']:
 
-        if key in dataset_1 - dataset_2:
-            add_key(key, data1[key], REMOVED, diff_tree)
+        if key in setmap['removed_keys']:
+            diff_tree[key] = add_node(REMOVED, data1[key])
 
-        elif key in dataset_2 - dataset_1:
-            add_key(key, data2[key], ADDED, diff_tree)
+        elif key in setmap['added_keys']:
+            diff_tree[key] = add_node(ADDED, data2[key])
 
         elif data1[key] == data2[key]:
-            add_key(key, data1[key], UNCHANGED, diff_tree)
+            diff_tree[key] = add_node(UNCHANGED, data1[key])
 
         elif isinstance(data1[key], dict) and isinstance(data2[key], dict):
-            add_key(key, get_diff_tree(
-                data1[key], data2[key]), NESTED, diff_tree)
+            diff_tree[key] = add_node(NESTED, get_diff_tree(data1[key], data2[key]))  # noqa: E501
 
         else:
-            add_key(key, [data1[key], data2[key]], UPDATED, diff_tree)
+            diff_tree[key] = add_node(UPDATED, data2[key], old_value=data1[key])
 
     return diff_tree

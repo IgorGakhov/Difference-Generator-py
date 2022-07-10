@@ -1,4 +1,6 @@
-from gendiff.constants import REMOVED, ADDED, UNCHANGED, UPDATED, NESTED
+from gendiff.constants import (
+    REMOVED, ADDED, UNCHANGED, UPDATED, NESTED, CHILD
+)
 from gendiff.constants import (
     DIFFLINE_TEMPLATE_STYLISH,
     ENDLINE_TEMPLATE_STYLISH,
@@ -82,7 +84,7 @@ def render_stylish(diff_tree: dict, diff_depth: int = 0, result=None) -> str:
         elif status is ADDED:
             render_key_level(key, value, '+', diff_depth, result)
 
-        elif status is UNCHANGED or status is NESTED:
+        elif status in (UNCHANGED, NESTED, CHILD):
             render_key_level(key, value, ' ', diff_depth, result)
 
         elif status is UPDATED:

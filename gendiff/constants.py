@@ -20,6 +20,7 @@ REMOVED = 'removed'
 UNCHANGED = 'unchanged'
 UPDATED = 'updated'
 NESTED = 'nested'
+CHILD = 'child'
 
 DIFFLINE_TEMPLATE_STYLISH = '{}  {} {}: {}'
 ENDLINE_TEMPLATE_STYLISH = '{}    {}'
