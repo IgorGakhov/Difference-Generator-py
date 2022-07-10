@@ -1,7 +1,6 @@
 import argparse
 
-
-from gendiff.constants import FORMATS, DEFAULT_FORMAT
+from gendiff.formatters.tree_render import FORMATS, DEFAULT_FORMAT
 
 
 def parse_arguments() -> argparse.Namespace:

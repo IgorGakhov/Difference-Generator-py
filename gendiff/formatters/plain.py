@@ -1,14 +1,12 @@
-from types import NoneType
-from typing import Any, Union
+from typing import Any
+
+from gendiff.constructor.diff_assembler import REMOVED, ADDED, UPDATED, NESTED
 
 
-from gendiff.constants import REMOVED, ADDED, UPDATED, NESTED
-from gendiff.constants import (
-    ADDED_TEMPLATE_PLAIN,
-    REMOVED_TEMPLATE_PLAIN,
-    UPDATED_TEMPLATE_PLAIN,
-    COMPLEX_VALUE
-)
+ADDED_TEMPLATE_PLAIN = "Property '{}' was added with value: {}"
+REMOVED_TEMPLATE_PLAIN = "Property '{}' was removed"
+UPDATED_TEMPLATE_PLAIN = "Property '{}' was updated. From {} to {}"
+COMPLEX_VALUE = "[complex value]"
 
 
 def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
@@ -65,7 +63,7 @@ def validate_data(value: Any) -> str:
         return f"'{str(value)}'"
 
 
-def render_plain(diff_tree: dict, parent: str = '', result: Union[NoneType, list] = None) -> str:  # noqa: E501
+def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
     """
     Description:
     ---

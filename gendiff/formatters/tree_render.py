@@ -1,12 +1,15 @@
 from gendiff.formatters.stylish import render_stylish
 from gendiff.formatters.plain import render_plain
 from gendiff.formatters.json import render_json
-from gendiff.constants import (
-    FORMAT_STYLISH,
-    FORMAT_PLAIN,
-    FORMAT_JSON,
-    UNSUPPORTED_FORMAT
-)
+
+
+FORMAT_STYLISH = 'stylish'
+FORMAT_PLAIN = 'plain'
+FORMAT_JSON = 'json'
+DEFAULT_FORMAT = FORMAT_STYLISH
+FORMATS = (FORMAT_STYLISH, FORMAT_JSON, FORMAT_PLAIN)
+UNSUPPORTED_FORMAT = '''Format is not supported.
+Use STYLISH, PLAIN or JSON format'''
 
 
 def visualize_diff_tree(diff_tree: dict, format: str) -> str:

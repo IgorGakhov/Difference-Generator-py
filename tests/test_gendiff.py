@@ -3,9 +3,11 @@ import pytest
 
 from gendiff.constructor.gendiff import generate_diff
 from gendiff.constructor.data_parser import open_file, load_json, load_yaml
-from gendiff.constants import (
-    FORMAT_STYLISH, FORMAT_PLAIN, FORMAT_JSON,
-    FILEREAD_ERR, UNSUPPORTED_TYPE, INVALID_FILE, UNSUPPORTED_FORMAT
+from gendiff.constructor.data_parser import (
+    FILEREAD_ERR, UNSUPPORTED_TYPE, INVALID_FILE
+)
+from gendiff.formatters.tree_render import (
+    FORMAT_STYLISH, FORMAT_PLAIN, FORMAT_JSON, UNSUPPORTED_FORMAT
 )
 
 

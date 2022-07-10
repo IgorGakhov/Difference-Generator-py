@@ -1,9 +1,12 @@
 from typing import Any
 
 
-from gendiff.constants import (
-    REMOVED, ADDED, UNCHANGED, UPDATED, NESTED, CHILD
-)
+ADDED = 'added'
+REMOVED = 'removed'
+UNCHANGED = 'unchanged'
+UPDATED = 'updated'
+NESTED = 'nested'
+CHILD = 'child'
 
 
 def generate_setmap(data1: dict, data2: dict) -> dict:

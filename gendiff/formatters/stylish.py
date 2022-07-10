@@ -1,15 +1,13 @@
-from types import NoneType
-from typing import Any, Union
+from typing import Any
 
-
-from gendiff.constants import (
+from gendiff.constructor.diff_assembler import (
     REMOVED, ADDED, UNCHANGED, UPDATED, NESTED, CHILD
 )
-from gendiff.constants import (
-    DIFFLINE_TEMPLATE_STYLISH,
-    ENDLINE_TEMPLATE_STYLISH,
-    NESTING_INDENTATION
-)
+
+
+DIFFLINE_TEMPLATE_STYLISH = '{}  {} {}: {}'
+ENDLINE_TEMPLATE_STYLISH = '{}    {}'
+NESTING_INDENTATION = 4
 
 
 def render_key_level(key: Any, value: Any, diff_symbol: str, diff_depth: int, result: list):  # noqa: E501
@@ -88,7 +86,7 @@ def validate_data(value: Any) -> str:
         return str(value)
 
 
-def render_stylish(diff_tree: dict, diff_depth: int = 0, result: Union[NoneType, list] = None) -> str:  # noqa: E501
+def render_stylish(diff_tree: dict, diff_depth: int = 0, result=None) -> str:
     """
     Description:
     ---

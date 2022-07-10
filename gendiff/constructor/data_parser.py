@@ -1,12 +1,17 @@
 from os import path
 import json
+
 import yaml
 
 
-from gendiff.constants import (
-    TYPE_JSON, TYPE_YML_OR_YAML,
-    FILEREAD_ERR, INVALID_FILE, UNSUPPORTED_TYPE
-)
+TYPE_JSON = '.json'
+TYPE_YML_OR_YAML = ('.yml', '.yaml')
+UNSUPPORTED_TYPE = '''Extension "{}" is not supported.
+Use JSON or YML/YAML format'''
+FILEREAD_ERR = '''Failed to open file '{}'.
+Please, check that the file path is entered correctly.'''
+INVALID_FILE = '''This file is not valid.
+Please, make sure the file is filled in correctly.'''
 
 
 def open_file(file_path: str) -> str:
