@@ -5,12 +5,17 @@ The training project "Difference Generator" on the Python Development course on 
 
 [![Actions Status](https://github.com/IgorGakhov/python-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/IgorGakhov/python-project-lvl2/actions) [![linter-and-tests-check](https://github.com/IgorGakhov/python-project-lvl2/actions/workflows/linter-and-tests-check.yml/badge.svg?branch=main)](https://github.com/IgorGakhov/python-project-lvl2/actions/workflows/linter-and-tests-check.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/07dccb64d3cfc2473711/maintainability)](https://codeclimate.com/github/IgorGakhov/python-project-lvl2/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/07dccb64d3cfc2473711/test_coverage)](https://codeclimate.com/github/IgorGakhov/python-project-lvl2/test_coverage) 
 
+### Dependencies:
+- python = "^3.8"
+- PyYAML = "^6.0"
+
 ## Description
 CLI utilite that shows difference between two files.
 
-* Suppported file formats: YAML, JSON.
-* Report generation as plain text, structured text or JSON.
-* Can be used as CLI tool or external library.
+- [X] Suppported file formats: YAML, JSON.
+- [X] Report generation as plain text, structured text or JSON.
+- [X] Can be used as CLI tool or external library.
+
 ___
 
 ## Installation
@@ -243,6 +248,15 @@ JSON (JavaScript Object Notation) is a standard text format for representing str
     }
 }
 ```
+
+**Statuses**:
+
+- [X] **_<span style="color:LawnGreen">"added"</span>_**: key was not present in the first file, but was present in the second file.
+- [X] **_<span style="color:Red">"removed"</span>_**: key was present in the first file, but not present in the second file.
+- [X] **_<span style="color:Gold">"unchanged"</span>_**: key exists in both files and its values match.
+- [X] **_<span style="color:Blue">"updated"</span>_**: key exists in both files, but its values do not match.
+- [X] **_<span style="color:Purple">"nested"</span>_**: similar to 'updated', but here the values are dictionaries.
+- [X] **_<span style="color:Cyan">"child"</span>_**: one of the root elements gave one of the statuses above except 'nested'.
 
 ##### Compare two flat JSON and/or YAML files: JSON format
 
