@@ -16,6 +16,21 @@ CLI utilite that shows difference between two files.
 - [X] Report generation as plain text, structured text or JSON.
 - [X] Can be used as CLI tool or external library.
 
+### Summary
+* [Description](#description)
+* [Installation](#installation)
+  * [Python](#python)
+  * [Poetry](#poetry)
+  * [Project package](#project-package)
+* [Usage](#usage)
+  * [As external library](#as-external-library)
+  * [As CLI tool](#as-cli-tool)
+  * [Help](#help)
+  * [Demo](#demo)
+  * [Stylish format](#pushpin-stylish-format)
+  * [Plain format](#pushpin-plain-format)
+  * [JSON format](#pushpin-json-format)
+
 ___
 
 ## Installation
