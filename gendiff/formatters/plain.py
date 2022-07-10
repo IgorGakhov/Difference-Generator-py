@@ -1,3 +1,7 @@
+from types import NoneType
+from typing import Any, Union
+
+
 from gendiff.constants import REMOVED, ADDED, UPDATED, NESTED
 from gendiff.constants import (
     ADDED_TEMPLATE_PLAIN,
@@ -7,31 +11,39 @@ from gendiff.constants import (
 )
 
 
-def get_path(key, parent: str) -> str:
+def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
     """
     Description:
     ---
-        Get element path starting from parent.
+        Calculating value, status and path from parent for a key.
 
     Parameters:
     ---
         - key (Any): The key for which the path is considered.
+        - diff_tree (dict): The difference tree.
         - parent (str): The path of the changed value from the parent.
 
     Return:
     ---
-        parent (str): Updated element path from parent.
+        keymap (dict): Key data as Python dictionary.
     """
-    if parent:
-        return parent + f'.{key}'
-    return f'{key}'
+    return {
+        'value': diff_tree[key].get('value'),
+        'status': diff_tree[key].get('status'),
+        'path': parent + f'.{key}' if parent else f'{key}'
+    }
 
 
-def handle_value(value) -> str:
+def validate_data(value: Any) -> str:
     """
     Description:
     ---
-        Processes the key value to represent in a string.
+        Replaces values:
+        - True -> "true"
+        - False -> "false"
+        - None -> "null"
+
+        It then processes the key value to represent in the string.
 
     Parameters:
     ---
@@ -39,19 +51,21 @@ def handle_value(value) -> str:
 
     Return:
     ---
-        Processed value (str).
+        value (str): Processed value.
     """
-    if value in ('true', 'false', 'null'):
-        return value
-    if isinstance(value, int):
+    if isinstance(value, bool):
+        return str(value).lower()
+    elif value is None:
+        return 'null'
+    elif isinstance(value, int):
         return str(value)
-    if isinstance(value, dict):
+    elif isinstance(value, dict):
         return COMPLEX_VALUE
     else:
-        return f"'{value}'"
+        return f"'{str(value)}'"
 
 
-def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
+def render_plain(diff_tree: dict, parent: str = '', result: Union[NoneType, list] = None) -> str:  # noqa: E501
     """
     Description:
     ---
@@ -71,30 +85,28 @@ def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
     """
     result = [] if result is None else result
     for key in diff_tree:
-        value = diff_tree[key].get('value')
-        status = diff_tree[key].get('status')
-        path = get_path(key, parent)
+        keymap = generate_keymap(key, diff_tree, parent)
 
-        if status is ADDED:
+        if keymap['status'] == ADDED:
             result.append(
                 ADDED_TEMPLATE_PLAIN.format(
-                    path, handle_value(value)
+                    keymap['path'], validate_data(keymap['value'])
                 )
             )
 
-        if status is REMOVED:
-            result.append(REMOVED_TEMPLATE_PLAIN.format(path))
+        if keymap['status'] == REMOVED:
+            result.append(REMOVED_TEMPLATE_PLAIN.format(keymap['path']))
 
-        if status is UPDATED:
+        if keymap['status'] == UPDATED:
             result.append(
                 UPDATED_TEMPLATE_PLAIN.format(
-                    path,
-                    handle_value(value.get('old')),
-                    handle_value(value.get('new'))
+                    keymap['path'],
+                    validate_data(keymap['value'].get('old')),
+                    validate_data(keymap['value'].get('new'))
                 )
             )
 
-        if status is NESTED:
-            render_plain(value, path, result)
+        if keymap['status'] == NESTED:
+            render_plain(keymap['value'], keymap['path'], result)
 
     return "\n".join(result)

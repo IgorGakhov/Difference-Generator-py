@@ -9,35 +9,6 @@ from gendiff.constants import (
 )
 
 
-def validate_data(diff_tree: dict) -> dict:
-    """
-    Description:
-    ---
-        Replaces recursively the values in the Dictionary type tree:
-        - True -> "true"
-        - False -> "false"
-        - None -> "null"
-
-    Parameters:
-    ---
-        - diff_tree (dict): The difference tree.
-
-    Return:
-    ---
-        The original tree with the values replaced.
-    """
-    for key in diff_tree:
-        value = diff_tree.get(key)
-        if type(value) is bool:
-            diff_tree[key] = str(value).lower()
-        if value is None:
-            diff_tree[key] = 'null'
-        if isinstance(value, dict):
-            validate_data(value)
-
-    return diff_tree
-
-
 def visualize_diff_tree(diff_tree: dict, format: str) -> str:
     """
     Description:
@@ -59,9 +30,9 @@ def visualize_diff_tree(diff_tree: dict, format: str) -> str:
         Calling the rendering function in the selected view.
     """
     if format == FORMAT_STYLISH:
-        return render_stylish(validate_data(diff_tree))
+        return render_stylish(diff_tree)
     elif format == FORMAT_PLAIN:
-        return render_plain(validate_data(diff_tree))
+        return render_plain(diff_tree)
     elif format == FORMAT_JSON:
         return render_json(diff_tree)
     else:
