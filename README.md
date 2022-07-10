@@ -10,8 +10,15 @@ The training project "Difference Generator" on the Python Development course on 
 - PyYAML = "^6.0"
 
 ## Description
-CLI utilite that shows difference between two files.
+Difference Generator is a program that determines the difference between two data structures. This is a popular task for which there are many online services, for example: http://www.jsondiff.com/. A similar mechanism is used when outputting tests or when automatically tracking changes in configuration files.
 
+The main question in the project: how to describe the internal representation of the diff between the files, so that it is as convenient as possible. Although there are many different ways to do this, only a few of them lead to simple code.
+
+Working with trees and tree recursion is very good at pumping algorithmic thinking. This is important because real-world processing involves constant data processing, various transformations, and collection output.
+
+To build a diff between two structures, many operations have to be done: reading files, parsing incoming data, building a tree of differences, and generating the necessary output.
+
+**Utility features:**
 - [X] Suppported file formats: YAML, JSON.
 - [X] Report generation as plain text, structured text or JSON.
 - [X] Can be used as CLI tool or external library.
