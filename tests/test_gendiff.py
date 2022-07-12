@@ -1,9 +1,9 @@
 import pytest
 
 
-from gendiff.constructor.gendiff import generate_diff
-from gendiff.constructor.data_parser import open_file, load_json, load_yaml
-from gendiff.constructor.data_parser import (
+from gendiff.file_processor.gendiff import generate_diff
+from gendiff.file_processor.data_parser import open_file, load_json, load_yaml
+from gendiff.file_processor.data_parser import (
     FILEREAD_ERR, UNSUPPORTED_TYPE, INVALID_FILE
 )
 from gendiff.formatters.tree_render import (

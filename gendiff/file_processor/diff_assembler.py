@@ -9,32 +9,7 @@ NESTED = 'nested'
 CHILD = 'child'
 
 
-def generate_setmap(data1: dict, data2: dict) -> dict:
-    """
-    Description:
-    ---
-        Processes data from dictionaries and generates sets
-        of key intersections.
-
-    Parameters:
-    ---
-        - data1 (dict): Data of the first file as a Python dictionary.
-        - data2 (dict): Data of the second file as a Python dictionary.
-
-    Return:
-    ---
-        setmap (dict): Sets dictionary of key intersections.
-    """
-    dataset_1, dataset_2 = set(data1.keys()), set(data2.keys())
-
-    return {
-        'removed_keys': dataset_1 - dataset_2,
-        'added_keys': dataset_2 - dataset_1,
-        'all_keys': sorted(dataset_1 | dataset_2)
-    }
-
-
-def add_node(status: str, value: Any, old_value: Any = None) -> dict:
+def add_node(node_type: str, value: Any, old_value: Any = None) -> dict:
     """
     Description:
     ---
@@ -43,23 +18,23 @@ def add_node(status: str, value: Any, old_value: Any = None) -> dict:
 
     Parameters:
     ---
-        - status (str): Assignable status.
+        - node_type (str): Assignable type of node diff.
         - value (Any): Assignable value.
 
         - old_value (Any): Assignable old value (default: None).
 
     Return:
     ---
-        node (dict): Data dictionary about the key (values and status).
+        node (dict): Data dictionary about the key (values and node_type).
     """
-    if status == UPDATED:
+    if node_type == UPDATED:
 
         node = {
             'value': {
                 'old': old_value,
                 'new': value
             },
-            'status': status
+            'node_type': node_type
         }
 
         if isinstance(old_value, dict):
@@ -69,11 +44,11 @@ def add_node(status: str, value: Any, old_value: Any = None) -> dict:
 
         node = {
             'value': value,
-            'status': status
+            'node_type': node_type
         }
 
-    if isinstance(value, dict) and status != NESTED:
-        if status == UPDATED:
+    if isinstance(value, dict) and node_type != NESTED:
+        if node_type == UPDATED:
             node['value']['new'] = identify_child(node['value']['new'])
         else:
             node['value'] = identify_child(node['value'])
@@ -85,7 +60,7 @@ def identify_child(value: dict) -> dict:
     """
     Description:
     ---
-        Assigns values and status to children elements.
+        Assigns values and node type to children elements.
 
     Parameters:
     ---
@@ -118,15 +93,15 @@ def get_diff_tree(data1: dict, data2: dict) -> dict:
         diff_tree (dict): The difference tree of the first file (data1)
         and the second file (data2).
     """
-    setmap = generate_setmap(data1, data2)
+    all_keys = sorted(set(data1.keys()) | set(data2.keys()))
 
     diff_tree = {}
-    for key in setmap['all_keys']:
+    for key in all_keys:
 
-        if key in setmap['removed_keys']:
+        if key in data1 and key not in data2:
             diff_tree[key] = add_node(REMOVED, data1[key])
 
-        elif key in setmap['added_keys']:
+        elif key not in data1 and key in data2:
             diff_tree[key] = add_node(ADDED, data2[key])
 
         elif data1[key] == data2[key]:

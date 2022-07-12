@@ -1,5 +1,5 @@
-from gendiff.constructor.data_parser import get_data
-from gendiff.constructor.diff_assembler import get_diff_tree
+from gendiff.file_processor.data_parser import get_data
+from gendiff.file_processor.diff_assembler import get_diff_tree
 from gendiff.formatters.tree_render import visualize_diff_tree
 from gendiff.formatters.tree_render import DEFAULT_FORMAT
 

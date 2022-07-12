@@ -14,7 +14,7 @@ INVALID_FILE = '''This file is not valid.
 Please, make sure the file is filled in correctly.'''
 
 
-def open_file(file_path: str) -> str:
+def open_file(file_path: str):
     """
     Description:
     ---
@@ -31,10 +31,14 @@ def open_file(file_path: str) -> str:
     Return:
     ---
         content (str): Data from a file as a string.
+        file_extension (str): File extension.
     """
+    _, file_extension = path.splitext(file_path)
+    file_extension = file_extension.lower()
+
     try:
         with open(file_path, 'r', encoding='utf-8') as content:
-            return content.read()
+            return content.read(), file_extension
     except OSError:
         raise RuntimeError(FILEREAD_ERR.format(file_path))
 
@@ -128,7 +132,6 @@ def get_data(file_path: str) -> dict:
     ---
         data (dict): Data in the form of a Python dictionary.
     """
-    _, file_extension = path.splitext(file_path)
-    file_extension = file_extension.lower()
+    content, file_extension = open_file(file_path)
 
-    return load_content(open_file(file_path), file_extension)
+    return load_content(content, file_extension)

@@ -3,35 +3,35 @@
         "value": {
             "follow": {
                 "value": false,
-                "status": "added"
+                "node_type": "added"
             },
             "setting1": {
                 "value": "Value 1",
-                "status": "unchanged"
+                "node_type": "unchanged"
             },
             "setting2": {
                 "value": 200,
-                "status": "removed"
+                "node_type": "removed"
             },
             "setting3": {
                 "value": {
                     "old": true,
                     "new": null
                 },
-                "status": "updated"
+                "node_type": "updated"
             },
             "setting4": {
                 "value": "blah blah",
-                "status": "added"
+                "node_type": "added"
             },
             "setting5": {
                 "value": {
                     "key5": {
                         "value": "value5",
-                        "status": "child"
+                        "node_type": "child"
                     }
                 },
-                "status": "added"
+                "node_type": "added"
             },
             "setting6": {
                 "value": {
@@ -42,24 +42,24 @@
                                     "old": "",
                                     "new": "so much"
                                 },
-                                "status": "updated"
+                                "node_type": "updated"
                             }
                         },
-                        "status": "nested"
+                        "node_type": "nested"
                     },
                     "key": {
                         "value": "value",
-                        "status": "unchanged"
+                        "node_type": "unchanged"
                     },
                     "ops": {
                         "value": "vops",
-                        "status": "added"
+                        "node_type": "added"
                     }
                 },
-                "status": "nested"
+                "node_type": "nested"
             }
         },
-        "status": "nested"
+        "node_type": "nested"
     },
     "group1": {
         "value": {
@@ -68,44 +68,44 @@
                     "old": "bas",
                     "new": "bars"
                 },
-                "status": "updated"
+                "node_type": "updated"
             },
             "foo": {
                 "value": "bar",
-                "status": "unchanged"
+                "node_type": "unchanged"
             },
             "nest": {
                 "value": {
                     "old": {
                         "key": {
                             "value": "value",
-                            "status": "child"
+                            "node_type": "child"
                         }
                     },
                     "new": "str"
                 },
-                "status": "updated"
+                "node_type": "updated"
             }
         },
-        "status": "nested"
+        "node_type": "nested"
     },
     "group2": {
         "value": {
             "abc": {
                 "value": 12345,
-                "status": "child"
+                "node_type": "child"
             },
             "deep": {
                 "value": {
                     "id": {
                         "value": 45,
-                        "status": "child"
+                        "node_type": "child"
                     }
                 },
-                "status": "child"
+                "node_type": "child"
             }
         },
-        "status": "removed"
+        "node_type": "removed"
     },
     "group3": {
         "value": {
@@ -115,19 +115,19 @@
                         "value": {
                             "number": {
                                 "value": 45,
-                                "status": "child"
+                                "node_type": "child"
                             }
                         },
-                        "status": "child"
+                        "node_type": "child"
                     }
                 },
-                "status": "child"
+                "node_type": "child"
             },
             "fee": {
                 "value": 100500,
-                "status": "child"
+                "node_type": "child"
             }
         },
-        "status": "added"
+        "node_type": "added"
     }
 }

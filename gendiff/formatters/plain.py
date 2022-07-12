@@ -1,6 +1,8 @@
 from typing import Any
 
-from gendiff.constructor.diff_assembler import REMOVED, ADDED, UPDATED, NESTED
+from gendiff.file_processor.diff_assembler import (
+    REMOVED, ADDED, UPDATED, NESTED
+)
 
 
 ADDED_TEMPLATE_PLAIN = "Property '{}' was added with value: {}"
@@ -13,7 +15,7 @@ def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
     """
     Description:
     ---
-        Calculating value, status and path from parent for a key.
+        Calculating value, node type and path from parent for a key.
 
     Parameters:
     ---
@@ -27,7 +29,7 @@ def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
     """
     return {
         'value': diff_tree[key].get('value'),
-        'status': diff_tree[key].get('status'),
+        'node_type': diff_tree[key].get('node_type'),
         'path': parent + f'.{key}' if parent else f'{key}'
     }
 
@@ -85,17 +87,17 @@ def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
     for key in diff_tree:
         keymap = generate_keymap(key, diff_tree, parent)
 
-        if keymap['status'] == ADDED:
+        if keymap['node_type'] == ADDED:
             result.append(
                 ADDED_TEMPLATE_PLAIN.format(
                     keymap['path'], validate_data(keymap['value'])
                 )
             )
 
-        if keymap['status'] == REMOVED:
+        if keymap['node_type'] == REMOVED:
             result.append(REMOVED_TEMPLATE_PLAIN.format(keymap['path']))
 
-        if keymap['status'] == UPDATED:
+        if keymap['node_type'] == UPDATED:
             result.append(
                 UPDATED_TEMPLATE_PLAIN.format(
                     keymap['path'],
@@ -104,7 +106,7 @@ def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
                 )
             )
 
-        if keymap['status'] == NESTED:
+        if keymap['node_type'] == NESTED:
             render_plain(keymap['value'], keymap['path'], result)
 
     return "\n".join(result)

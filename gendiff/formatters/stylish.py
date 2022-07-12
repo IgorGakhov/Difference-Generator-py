@@ -1,6 +1,6 @@
 from typing import Any
 
-from gendiff.constructor.diff_assembler import (
+from gendiff.file_processor.diff_assembler import (
     REMOVED, ADDED, UNCHANGED, UPDATED, NESTED, CHILD
 )
 
@@ -114,18 +114,18 @@ def render_stylish(diff_tree: dict, diff_depth: int = 0) -> str:
 
     for key in diff_tree:
         value = diff_tree[key].get('value')
-        status = diff_tree[key].get('status')
+        node_type = diff_tree[key].get('node_type')
 
-        if status == REMOVED:
+        if node_type == REMOVED:
             result.extend(render_key_level(key, value, '-', diff_depth))
 
-        elif status == ADDED:
+        elif node_type == ADDED:
             result.extend(render_key_level(key, value, '+', diff_depth))
 
-        elif status in (UNCHANGED, NESTED, CHILD):
+        elif node_type in (UNCHANGED, NESTED, CHILD):
             result.extend(render_key_level(key, value, ' ', diff_depth))
 
-        elif status == UPDATED:
+        elif node_type == UPDATED:
             result.extend(render_key_level(key, value.get('old'), '-', diff_depth))  # noqa: E501
             result.extend(render_key_level(key, value.get('new'), '+', diff_depth))  # noqa: E501
 
