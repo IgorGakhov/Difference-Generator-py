@@ -10,23 +10,7 @@ CHILD = 'child'
 
 
 def add_node(node_type: str, value: Any, old_value: Any = None) -> dict:
-    """
-    Description:
-    ---
-        Adds data about the key (node) from the combined set to pass
-        to the difference tree.
 
-    Parameters:
-    ---
-        - node_type (str): Assignable type of node diff.
-        - value (Any): Assignable value.
-
-        - old_value (Any): Assignable old value (default: None).
-
-    Return:
-    ---
-        node (dict): Data dictionary about the key (values and node_type).
-    """
     if node_type == UPDATED:
 
         node = {
@@ -57,19 +41,7 @@ def add_node(node_type: str, value: Any, old_value: Any = None) -> dict:
 
 
 def identify_child(value: dict) -> dict:
-    """
-    Description:
-    ---
-        Assigns values and node type to children elements.
 
-    Parameters:
-    ---
-        - value (dict): Meaning for recursive processing.
-
-    Return:
-    ---
-        child (dict): Processed nested elements for value.
-    """
     child = {}
     for nested_key in value.keys():
         child[nested_key] = add_node(CHILD, value.get(nested_key))

@@ -1,10 +1,12 @@
+from typing import Callable
+
 from gendiff.file_processor.data_parser import get_data
 from gendiff.file_processor.diff_assembler import get_diff_tree
 from gendiff.formatters.tree_render import visualize_diff_tree
 from gendiff.formatters.tree_render import DEFAULT_FORMAT
 
 
-def generate_diff(file_path1: str, file_path2: str, format: str = DEFAULT_FORMAT) -> str:  # noqa: E501
+def generate_diff(file_path1: str, file_path2: str, format: str = DEFAULT_FORMAT) -> Callable:  # noqa: E501
     """
     Description:
     ---

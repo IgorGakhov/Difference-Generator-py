@@ -12,21 +12,7 @@ COMPLEX_VALUE = "[complex value]"
 
 
 def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
-    """
-    Description:
-    ---
-        Calculating value, node type and path from parent for a key.
 
-    Parameters:
-    ---
-        - key (Any): The key for which the path is considered.
-        - diff_tree (dict): The difference tree.
-        - parent (str): The path of the changed value from the parent.
-
-    Return:
-    ---
-        keymap (dict): Key data as Python dictionary.
-    """
     return {
         'value': diff_tree[key].get('value'),
         'node_type': diff_tree[key].get('node_type'),
@@ -35,34 +21,19 @@ def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
 
 
 def validate_data(value: Any) -> str:
-    """
-    Description:
-    ---
-        Replaces values:
-        - True -> "true"
-        - False -> "false"
-        - None -> "null"
 
-        It then processes the key value to represent in the string.
-
-    Parameters:
-    ---
-        - value (Any): Assignable value.
-
-    Return:
-    ---
-        value (str): Processed value.
-    """
     if isinstance(value, bool):
-        return str(value).lower()
+        valid_value = str(value).lower()
     elif value is None:
-        return 'null'
+        valid_value = 'null'
     elif isinstance(value, int):
-        return str(value)
+        valid_value = str(value)
     elif isinstance(value, dict):
-        return COMPLEX_VALUE
+        valid_value = COMPLEX_VALUE
     else:
-        return f"'{str(value)}'"
+        valid_value = f"'{str(value)}'"
+
+    return valid_value
 
 
 def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:

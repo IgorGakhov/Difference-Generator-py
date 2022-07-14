@@ -1,10 +1,12 @@
 # !usr/bin/env python3
 
+from typing import NoReturn
+
 from gendiff.cli import parse_arguments
 from gendiff.file_processor.gendiff import generate_diff
 
 
-def main() -> str:
+def main() -> NoReturn:
     """
     Description:
     ---
