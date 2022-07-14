@@ -11,39 +11,6 @@ FRAME_TEMPLATE = '{{\n{}\n}}'
 NESTING_INDENTATION = 4
 
 
-def render_key_level(key: Any, value: Any, diff_symbol: str, diff_depth: int) -> list:  # noqa: E501
-
-    result = []
-    indent = diff_depth * ' '
-
-    if isinstance(value, dict):
-        result.extend([
-            DIFFLINE_TEMPLATE.format(indent, diff_symbol, key, '{'),
-            render_stylish(value, diff_depth + NESTING_INDENTATION),
-            ENDLINE_TEMPLATE.format(indent, '}')
-        ])
-
-        return result
-
-    else:
-        value = validate_data(value)
-        result.append(DIFFLINE_TEMPLATE.format(indent, diff_symbol, key, value))
-
-        return result
-
-
-def validate_data(value: Any) -> str:
-
-    if isinstance(value, bool):
-        valid_value = str(value).lower()
-    elif value is None:
-        valid_value = 'null'
-    else:
-        valid_value = str(value)
-
-    return valid_value
-
-
 def render_stylish(diff_tree: dict, diff_depth: int = 0) -> str:
     """
     Description:
@@ -81,3 +48,36 @@ def render_stylish(diff_tree: dict, diff_depth: int = 0) -> str:
 
     result = '\n'.join(result)
     return FRAME_TEMPLATE.format(result) if diff_depth == 0 else result
+
+
+def render_key_level(key: Any, value: Any, diff_symbol: str, diff_depth: int) -> list:  # noqa: E501
+
+    result = []
+    indent = diff_depth * ' '
+
+    if isinstance(value, dict):
+        result.extend([
+            DIFFLINE_TEMPLATE.format(indent, diff_symbol, key, '{'),
+            render_stylish(value, diff_depth + NESTING_INDENTATION),
+            ENDLINE_TEMPLATE.format(indent, '}')
+        ])
+
+        return result
+
+    else:
+        value = validate_data(value)
+        result.append(DIFFLINE_TEMPLATE.format(indent, diff_symbol, key, value))
+
+        return result
+
+
+def validate_data(value: Any) -> str:
+
+    if isinstance(value, bool):
+        valid_value = str(value).lower()
+    elif value is None:
+        valid_value = 'null'
+    else:
+        valid_value = str(value)
+
+    return valid_value

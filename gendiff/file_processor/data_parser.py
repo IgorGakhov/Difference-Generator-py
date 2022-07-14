@@ -16,6 +16,24 @@ INVALID_FILE = '''This file is not valid.
 Please, make sure the file is filled in correctly.'''
 
 
+def get_data(file_path: str) -> Callable:
+    """
+    Description:
+    ---
+        Opens a file, gets the file extension, and loads the data
+        as a Python dictionary.
+
+    Parameters:
+    ---
+        - file_path (str): Path to file (absolute or relative).
+
+    Return:
+    ---
+        data (dict): Data in the form of a Python dictionary.
+    """
+    return load_content(open_file(file_path), get_file_extension(file_path))
+
+
 def open_file(file_path: str) -> TextIOWrapper:
 
     try:
@@ -57,21 +75,3 @@ def load_yaml(content: str) -> dict:
         return yaml.load(content, Loader=yaml.FullLoader)
     except yaml.YAMLError:
         raise RuntimeError(INVALID_FILE)
-
-
-def get_data(file_path: str) -> Callable:
-    """
-    Description:
-    ---
-        Opens a file, gets the file extension, and loads the data
-        as a Python dictionary.
-
-    Parameters:
-    ---
-        - file_path (str): Path to file (absolute or relative).
-
-    Return:
-    ---
-        data (dict): Data in the form of a Python dictionary.
-    """
-    return load_content(open_file(file_path), get_file_extension(file_path))
