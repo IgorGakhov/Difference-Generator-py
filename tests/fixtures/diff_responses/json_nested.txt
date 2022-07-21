@@ -3,35 +3,32 @@
         "value": {
             "follow": {
                 "value": false,
-                "node_type": "added"
+                "node type": "ADDED"
             },
             "setting1": {
                 "value": "Value 1",
-                "node_type": "unchanged"
+                "node type": "UNCHANGED"
             },
             "setting2": {
                 "value": 200,
-                "node_type": "removed"
+                "node type": "REMOVED"
             },
             "setting3": {
                 "value": {
                     "old": true,
                     "new": null
                 },
-                "node_type": "updated"
+                "node type": "UPDATED"
             },
             "setting4": {
                 "value": "blah blah",
-                "node_type": "added"
+                "node type": "ADDED"
             },
             "setting5": {
                 "value": {
-                    "key5": {
-                        "value": "value5",
-                        "node_type": "child"
-                    }
+                    "key5": "value5"
                 },
-                "node_type": "added"
+                "node type": "ADDED"
             },
             "setting6": {
                 "value": {
@@ -42,24 +39,24 @@
                                     "old": "",
                                     "new": "so much"
                                 },
-                                "node_type": "updated"
+                                "node type": "UPDATED"
                             }
                         },
-                        "node_type": "nested"
+                        "node type": "NESTED"
                     },
                     "key": {
                         "value": "value",
-                        "node_type": "unchanged"
+                        "node type": "UNCHANGED"
                     },
                     "ops": {
                         "value": "vops",
-                        "node_type": "added"
+                        "node type": "ADDED"
                     }
                 },
-                "node_type": "nested"
+                "node type": "NESTED"
             }
         },
-        "node_type": "nested"
+        "node type": "NESTED"
     },
     "group1": {
         "value": {
@@ -68,66 +65,42 @@
                     "old": "bas",
                     "new": "bars"
                 },
-                "node_type": "updated"
+                "node type": "UPDATED"
             },
             "foo": {
                 "value": "bar",
-                "node_type": "unchanged"
+                "node type": "UNCHANGED"
             },
             "nest": {
                 "value": {
                     "old": {
-                        "key": {
-                            "value": "value",
-                            "node_type": "child"
-                        }
+                        "key": "value"
                     },
                     "new": "str"
                 },
-                "node_type": "updated"
+                "node type": "UPDATED"
             }
         },
-        "node_type": "nested"
+        "node type": "NESTED"
     },
     "group2": {
         "value": {
-            "abc": {
-                "value": 12345,
-                "node_type": "child"
-            },
+            "abc": 12345,
             "deep": {
-                "value": {
-                    "id": {
-                        "value": 45,
-                        "node_type": "child"
-                    }
-                },
-                "node_type": "child"
+                "id": 45
             }
         },
-        "node_type": "removed"
+        "node type": "REMOVED"
     },
     "group3": {
         "value": {
             "deep": {
-                "value": {
-                    "id": {
-                        "value": {
-                            "number": {
-                                "value": 45,
-                                "node_type": "child"
-                            }
-                        },
-                        "node_type": "child"
-                    }
-                },
-                "node_type": "child"
+                "id": {
+                    "number": 45
+                }
             },
-            "fee": {
-                "value": 100500,
-                "node_type": "child"
-            }
+            "fee": 100500
         },
-        "node_type": "added"
+        "node type": "ADDED"
     }
 }

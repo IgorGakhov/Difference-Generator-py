@@ -9,9 +9,10 @@ ADDED_TEMPLATE_PLAIN = "Property '{}' was added with value: {}"
 REMOVED_TEMPLATE_PLAIN = "Property '{}' was removed"
 UPDATED_TEMPLATE_PLAIN = "Property '{}' was updated. From {} to {}"
 COMPLEX_VALUE = "[complex value]"
+PATH = "{}.{}"
 
 
-def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
+def render_plain(diff_tree: list) -> str:
     """
     Description:
     ---
@@ -29,42 +30,39 @@ def render_plain(diff_tree: dict, parent: str = '', result=None) -> str:
     ---
         String visualization of a tree in plain format.
     """
-    result = [] if result is None else result
-    for key in diff_tree:
-        keymap = generate_keymap(key, diff_tree, parent)
-
-        if keymap['node_type'] == ADDED:
-            result.append(
-                ADDED_TEMPLATE_PLAIN.format(
-                    keymap['path'], validate_data(keymap['value'])
-                )
-            )
-
-        if keymap['node_type'] == REMOVED:
-            result.append(REMOVED_TEMPLATE_PLAIN.format(keymap['path']))
-
-        if keymap['node_type'] == UPDATED:
-            result.append(
-                UPDATED_TEMPLATE_PLAIN.format(
-                    keymap['path'],
-                    validate_data(keymap['value'].get('old')),
-                    validate_data(keymap['value'].get('new'))
-                )
-            )
-
-        if keymap['node_type'] == NESTED:
-            render_plain(keymap['value'], keymap['path'], result)
-
-    return "\n".join(result)
+    rendered_data = render_nodes(diff_tree)
+    return rendered_data
 
 
-def generate_keymap(key: Any, diff_tree: dict, parent: str) -> dict:
+def render_nodes(diff: list, source='') -> str:
 
-    return {
-        'value': diff_tree[key].get('value'),
-        'node_type': diff_tree[key].get('node_type'),
-        'path': parent + f'.{key}' if parent else f'{key}'
-    }
+    result = []
+    diff.sort(key=lambda node: node['key'])
+
+    for node in diff:
+
+        path = PATH.format(source, node['key']) if source else node['key']
+
+        if node['node type'] == REMOVED:
+            result.append(REMOVED_TEMPLATE_PLAIN.format(path))
+
+        elif node['node type'] == ADDED:
+            result.append(ADDED_TEMPLATE_PLAIN.format(
+                path,
+                validate_data(node['value']['new'])
+            ))
+
+        elif node['node type'] == UPDATED:
+            result.append(UPDATED_TEMPLATE_PLAIN.format(
+                path,
+                validate_data(node['value']['old']),
+                validate_data(node['value']['new'])
+            ))
+
+        elif node['node type'] == NESTED:
+            result.append(render_nodes(node['children'], path))
+
+    return '\n'.join(result)
 
 
 def validate_data(value: Any) -> str:

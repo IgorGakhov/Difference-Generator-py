@@ -5,7 +5,13 @@ The training project "Difference Generator" on the Python Development course on 
 
 [![Actions Status](https://github.com/IgorGakhov/python-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/IgorGakhov/python-project-lvl2/actions) [![linter-and-tests-check](https://github.com/IgorGakhov/python-project-lvl2/actions/workflows/linter-and-tests-check.yml/badge.svg?branch=main)](https://github.com/IgorGakhov/python-project-lvl2/actions/workflows/linter-and-tests-check.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/07dccb64d3cfc2473711/maintainability)](https://codeclimate.com/github/IgorGakhov/python-project-lvl2/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/07dccb64d3cfc2473711/test_coverage)](https://codeclimate.com/github/IgorGakhov/python-project-lvl2/test_coverage) 
 
+### Built With
+Languages, frameworks and libraries used in the implementation of the project:
+
+[![](https://img.shields.io/badge/language-python-blue)](https://github.com/topics/python) [![](https://img.shields.io/badge/library-json-yellow)](https://github.com/topics/json) [![](https://img.shields.io/badge/library-pyyaml-red)](https://github.com/topics/pyyaml) [![](https://img.shields.io/badge/library-argparse-lightgrey)](https://github.com/topics/argparse)
+
 ### Dependencies:
+List of dependencies, without which the project code will not work correctly:
 - python = "^3.8"
 - PyYAML = "^6.0"
 
@@ -37,7 +43,9 @@ To build a diff between two structures, many operations have to be done: reading
   * [Stylish format](#pushpin-stylish-format)
   * [Plain format](#pushpin-plain-format)
   * [JSON format](#pushpin-json-format)
-
+* [Development](#development)
+  * [Project Organization](#project-organization)
+  * [Useful commands](#useful-commands)
 ___
 
 ## Installation
@@ -247,46 +255,103 @@ JSON (JavaScript Object Notation) is a standard text format for representing str
 {
     "follow": {
         "value": false,
-        "status": "removed"
+        "node type": "REMOVED"
     },
     "host": {
         "value": "hexlet.io",
-        "status": "unchanged"
+        "node type": "UNCHANGED"
     },
     "proxy": {
         "value": "123.234.53.22",
-        "status": "removed"
+        "node type": "REMOVED"
     },
     "timeout": {
         "value": {
             "old": 50,
             "new": 20
         },
-        "status": "updated"
+        "node type": "UPDATED"
     },
     "verbose": {
         "value": true,
-        "status": "added"
+        "node type": "ADDED"
     }
 }
 ```
 
-**Statuses**:
+**Node types**:
 
-- [X] **_<span style="color:LawnGreen">"added"</span>_**: key was not present in the first file, but was present in the second file.
-- [X] **_<span style="color:Red">"removed"</span>_**: key was present in the first file, but not present in the second file.
-- [X] **_<span style="color:Gold">"unchanged"</span>_**: key exists in both files and its values match.
-- [X] **_<span style="color:Blue">"updated"</span>_**: key exists in both files, but its values do not match.
-- [X] **_<span style="color:Purple">"nested"</span>_**: similar to 'updated', but here the values are dictionaries.
-- [X] **_<span style="color:Cyan">"child"</span>_**: one of the root elements gave one of the statuses above except 'nested'.
+* **_<span style="color:LawnGreen">"added"</span>_**: key was not present in the first file, but was present in the second file.
+* **_<span style="color:Red">"removed"</span>_**: key was present in the first file, but not present in the second file.
+* **_<span style="color:Gold">"unchanged"</span>_**: key exists in both files and its values match.
+* **_<span style="color:Blue">"updated"</span>_**: key exists in both files, but its values do not match.
+* **_<span style="color:Purple">"nested"</span>_**: similar to 'updated', but here the values are dictionaries.
 
 ##### Compare two flat JSON and/or YAML files: JSON format
 
-[![asciicast](https://asciinema.org/a/s57IBXPBybHQOUgu3dr65HTpW.svg)](https://asciinema.org/a/s57IBXPBybHQOUgu3dr65HTpW)
+[![asciicast](https://asciinema.org/a/iq0XIb4uPPmtSJtyuthuTeWwh.svg)](https://asciinema.org/a/iq0XIb4uPPmtSJtyuthuTeWwh)
 
 ##### Compare two nested JSON and/or YAML files: JSON format
 
-[![asciicast](https://asciinema.org/a/Llya4igfVJdBNblOgU4rbyubI.svg)](https://asciinema.org/a/Llya4igfVJdBNblOgU4rbyubI)
+[![asciicast](https://asciinema.org/a/ovmSSaB7EtwJNYwl3ccyzuoVh.svg)](https://asciinema.org/a/ovmSSaB7EtwJNYwl3ccyzuoVh)
+
+___
+
+## Development
+
+### Project Organization
+
+```bash
+
+.
+├── gendiff
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── file_processor
+│   │   ├── __init__.py
+│   │   ├── gendiff.py
+│   │   ├── data_parser.py
+│   │   └── diff_assembler.py
+│   ├── formatters
+│   │   ├── __init__.py
+│   │   ├── tree_render.py
+│   │   ├── stylish.py
+│   │   ├── plain.py
+│   │   └── json.py
+│   └── scripts
+│       ├── __init__.py
+│       └── run.py
+├── Makefile
+├── poetry.lock
+├── pyproject.toml
+├── README.md
+├── setup.cfg
+└── tests
+    ├── fixtures
+    │   ├── diff_requests
+    │   └── diff_responses
+    ├── test_cli.py
+    └── test_gendiff.py
+```
+
+### Useful commands
+
+The commands most used in development are listed in the Makefile:
+
+<dl>
+    <dt><code>make package-install</code></dt>
+    <dd>Installing a package in the user environment.</dd>
+    <dt><code>make build</code></dt>
+    <dd>Building the distribution of he Poetry package.</dd>
+    <dt><code>make package-force-reinstall</code></dt>
+    <dd>Reinstalling the package in the user environment.</dd>
+    <dt><code>make lint</code></dt>
+    <dd>Checking code with linter.</dd>
+    <dt><code>make test</code></dt>
+    <dd>Tests the code.</dd>
+    <dt><code>make fast-check</code></dt>
+    <dd>Builds the distribution, reinstalls it in the user's environment, checks the code with tests and linter.</dd>
+</dl>
 
 ___
 

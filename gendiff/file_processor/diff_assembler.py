@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 
 ADDED = 'added'
@@ -6,7 +6,6 @@ REMOVED = 'removed'
 UNCHANGED = 'unchanged'
 UPDATED = 'updated'
 NESTED = 'nested'
-CHILD = 'child'
 
 
 def get_diff_tree(data1: dict, data2: dict) -> dict:
@@ -27,62 +26,44 @@ def get_diff_tree(data1: dict, data2: dict) -> dict:
     """
     all_keys = sorted(set(data1.keys()) | set(data2.keys()))
 
-    diff_tree = {}
+    diff_tree = []
     for key in all_keys:
 
         if key in data1 and key not in data2:
-            diff_tree[key] = add_node(REMOVED, data1[key])
+            diff_tree.append(add_node(key, REMOVED, old_value=data1[key]))
 
         elif key not in data1 and key in data2:
-            diff_tree[key] = add_node(ADDED, data2[key])
+            diff_tree.append(add_node(key, ADDED, value=data2[key]))
 
         elif data1[key] == data2[key]:
-            diff_tree[key] = add_node(UNCHANGED, data1[key])
+            diff_tree.append(add_node(key, UNCHANGED, old_value=data1[key]))
 
         elif isinstance(data1[key], dict) and isinstance(data2[key], dict):
-            diff_tree[key] = add_node(NESTED, get_diff_tree(data1[key], data2[key]))  # noqa: E501
+            child_diff = get_diff_tree(data1[key], data2[key])
+            diff_tree.append(add_node(key, NESTED, children=child_diff))
 
         else:
-            diff_tree[key] = add_node(UPDATED, data2[key], old_value=data1[key])
+            diff_tree.append(
+                add_node(key, UPDATED, value=data2[key], old_value=data1[key])
+            )
 
     return diff_tree
 
 
-def add_node(node_type: str, value: Any, old_value: Any = None) -> dict:
+def add_node(key: Any, node_type: str,
+             value: Any = None, old_value: Any = None,
+             children: Optional[list] = None) -> dict:
 
-    if node_type == UPDATED:
+    node = {
+        'key': key,
+        'value': {
+            'old': old_value,
+            'new': value
+        },
+        'node type': node_type
+    }
 
-        node = {
-            'value': {
-                'old': old_value,
-                'new': value
-            },
-            'node_type': node_type
-        }
-
-        if isinstance(old_value, dict):
-            node['value']['old'] = identify_child(node['value']['old'])
-
-    else:
-
-        node = {
-            'value': value,
-            'node_type': node_type
-        }
-
-    if isinstance(value, dict) and node_type != NESTED:
-        if node_type == UPDATED:
-            node['value']['new'] = identify_child(node['value']['new'])
-        else:
-            node['value'] = identify_child(node['value'])
+    if children is not None:
+        node['children'] = children
 
     return node
-
-
-def identify_child(value: dict) -> dict:
-
-    child = {}
-    for nested_key in value.keys():
-        child[nested_key] = add_node(CHILD, value.get(nested_key))
-
-    return child

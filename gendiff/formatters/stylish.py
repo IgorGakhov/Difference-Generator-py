@@ -1,17 +1,19 @@
 from typing import Any
 
 from gendiff.file_processor.diff_assembler import (
-    REMOVED, ADDED, UNCHANGED, UPDATED, NESTED, CHILD
+    REMOVED, ADDED, UNCHANGED, UPDATED, NESTED
 )
 
 
-DIFFLINE_TEMPLATE = '{}  {} {}: {}'
-ENDLINE_TEMPLATE = '{}    {}'
+STARTLINE_TEMPLATE = '{}{} {}: {{'
+DIFFLINE_TEMPLATE = '{}{} {}: {}'
+ENDLINE_TEMPLATE = '{}  }}'
 FRAME_TEMPLATE = '{{\n{}\n}}'
 NESTING_INDENTATION = 4
+SIGN_SPACING = 2
 
 
-def render_stylish(diff_tree: dict, diff_depth: int = 0) -> str:
+def render_stylish(diff_tree: dict) -> str:
     """
     Description:
     ---
@@ -27,48 +29,85 @@ def render_stylish(diff_tree: dict, diff_depth: int = 0) -> str:
     ---
         result (str): String visualization of a tree in stylish format.
     """
-    result = []
-
-    for key in diff_tree:
-        value = diff_tree[key].get('value')
-        node_type = diff_tree[key].get('node_type')
-
-        if node_type == REMOVED:
-            result.extend(render_key_level(key, value, '-', diff_depth))
-
-        elif node_type == ADDED:
-            result.extend(render_key_level(key, value, '+', diff_depth))
-
-        elif node_type in (UNCHANGED, NESTED, CHILD):
-            result.extend(render_key_level(key, value, ' ', diff_depth))
-
-        elif node_type == UPDATED:
-            result.extend(render_key_level(key, value.get('old'), '-', diff_depth))  # noqa: E501
-            result.extend(render_key_level(key, value.get('new'), '+', diff_depth))  # noqa: E501
-
-    result = '\n'.join(result)
-    return FRAME_TEMPLATE.format(result) if diff_depth == 0 else result
+    rendered_data = FRAME_TEMPLATE.format(render_nodes(diff_tree))
+    return rendered_data
 
 
-def render_key_level(key: Any, value: Any, diff_symbol: str, diff_depth: int) -> list:  # noqa: E501
+def render_nodes(diff: list, level: int = 1) -> str:  # noqa: C901
 
     result = []
-    indent = diff_depth * ' '
+    indent = calculate_indent(level)
+    diff.sort(key=lambda node: node['key'])
+
+    for node in diff:
+
+        if node['node type'] == REMOVED:
+            result.append(compose_line(
+                node['key'], node['value']['old'], '-', level
+            ))
+
+        elif node['node type'] == ADDED:
+            result.append(compose_line(
+                node['key'], node['value']['new'], '+', level
+            ))
+
+        elif node['node type'] == UNCHANGED:
+            result.append(compose_line(
+                node['key'], node['value']['old'], ' ', level
+            ))
+
+        elif node['node type'] == UPDATED:
+            result.append(compose_line(
+                node['key'], node['value']['old'], '-', level
+            ))
+            result.append(compose_line(
+                node['key'], node['value']['new'], '+', level
+            ))
+
+        elif node['node type'] == NESTED:
+            result.extend([
+                STARTLINE_TEMPLATE.format(indent, ' ', node['key']),
+                render_nodes(node['children'], level + 1),
+                ENDLINE_TEMPLATE.format(indent)
+            ])
+
+    return '\n'.join(result)
+
+
+def calculate_indent(level: int) -> str:
+
+    return ' ' * (level * NESTING_INDENTATION - SIGN_SPACING)
+
+
+def compose_line(key: Any, value: Any, sign: str, level: int) -> str:
+
+    result = []
+    indent = calculate_indent(level)
+    level += 1
 
     if isinstance(value, dict):
         result.extend([
-            DIFFLINE_TEMPLATE.format(indent, diff_symbol, key, '{'),
-            render_stylish(value, diff_depth + NESTING_INDENTATION),
-            ENDLINE_TEMPLATE.format(indent, '}')
+            STARTLINE_TEMPLATE.format(indent, sign, key),
+            formate_dict_value(value, level),
+            ENDLINE_TEMPLATE.format(indent)
         ])
 
-        return result
-
     else:
-        value = validate_data(value)
-        result.append(DIFFLINE_TEMPLATE.format(indent, diff_symbol, key, value))
+        result.append(DIFFLINE_TEMPLATE.format(
+            indent, sign, key, validate_data(value)
+        ))
 
-        return result
+    return '\n'.join(result)
+
+
+def formate_dict_value(dict_value: dict, level: int) -> str:
+
+    result = []
+
+    for key, value in dict_value.items():
+        result.append(compose_line(key, value, ' ', level))
+
+    return '\n'.join(result)
 
 
 def validate_data(value: Any) -> str:
