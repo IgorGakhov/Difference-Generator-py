@@ -18,11 +18,9 @@ def main() -> NoReturn:
     """
     args = parse_arguments()
     try:
-        result = generate_diff(args.first_file,
-                               args.second_file,
-                               args.format
-                               )
-        print(result)
+        print(
+            generate_diff(args.first_file, args.second_file, args.format)
+        )
     except Exception as error:
         print(error)
 

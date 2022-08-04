@@ -1,11 +1,10 @@
 import pytest
 
-
 from gendiff.file_processor.gendiff import generate_diff
-from gendiff.file_processor.data_parser import open_file, load_json, load_yaml
-from gendiff.file_processor.data_parser import (
-    FILEREAD_ERR, UNSUPPORTED_TYPE, INVALID_FILE
-)
+from gendiff.file_processor.file_handler import read_file
+from gendiff.file_processor.file_handler import FILEREAD_ERR
+from gendiff.file_processor.data_loader import load_json, load_yaml
+from gendiff.file_processor.data_loader import UNSUPPORTED_TYPE, INVALID_FILE
 from gendiff.formatters.tree_render import (
     FORMAT_STYLISH, FORMAT_PLAIN, FORMAT_JSON, UNSUPPORTED_FORMAT
 )
@@ -60,7 +59,7 @@ def test_generate_diff(file1, file2, format, response_file_path):
 
 def test_open_file_fail():
     with pytest.raises(RuntimeError) as pytest_error:
-        open_file('wrong file path')
+        read_file('wrong file path')
     assert pytest_error.type == RuntimeError
     assert str(pytest_error.value) == FILEREAD_ERR.format('wrong file path')
 

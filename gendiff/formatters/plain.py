@@ -76,6 +76,6 @@ def validate_data(value: Any) -> str:
     elif isinstance(value, dict):
         valid_value = COMPLEX_VALUE
     else:
-        valid_value = f"'{str(value)}'"
+        valid_value = f"'{value}'"
 
     return valid_value

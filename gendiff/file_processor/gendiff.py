@@ -1,6 +1,7 @@
 from typing import Callable
 
-from gendiff.file_processor.data_parser import get_data
+from gendiff.file_processor.file_handler import explore_file
+from gendiff.file_processor.data_loader import load_content
 from gendiff.file_processor.diff_assembler import get_diff_tree
 from gendiff.formatters.tree_render import visualize_diff_tree
 from gendiff.formatters.tree_render import DEFAULT_FORMAT
@@ -24,6 +25,9 @@ def generate_diff(file_path1: str, file_path2: str, format: str = DEFAULT_FORMAT
     ---
         Visualized Difference Tree.
     """
-    data1, data2 = get_data(file_path1), get_data(file_path2)
+    diff_tree = get_diff_tree(
+        data1=load_content(*explore_file(file_path1)),
+        data2=load_content(*explore_file(file_path2))
+    )
 
-    return visualize_diff_tree(get_diff_tree(data1, data2), format)
+    return visualize_diff_tree(diff_tree, format)
