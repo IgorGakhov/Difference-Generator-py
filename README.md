@@ -10,7 +10,7 @@ Languages, frameworks and libraries used in the implementation of the project:
 
 [![](https://img.shields.io/badge/language-python-blue)](https://github.com/topics/python) [![](https://img.shields.io/badge/library-json-yellow)](https://github.com/topics/json) [![](https://img.shields.io/badge/library-pyyaml-red)](https://github.com/topics/pyyaml) [![](https://img.shields.io/badge/library-argparse-lightgrey)](https://github.com/topics/argparse)
 
-### Dependencies:
+### Dependencies
 List of dependencies, without which the project code will not work correctly:
 - python = "^3.8"
 - PyYAML = "^6.0"
@@ -44,6 +44,7 @@ To build a diff between two structures, many operations have to be done: reading
   * [Plain format](#pushpin-plain-format)
   * [JSON format](#pushpin-json-format)
 * [Development](#development)
+  * [Dev Dependencies](#dev-dependencies)
   * [Project Organization](#project-organization)
   * [Useful commands](#useful-commands)
 ___
@@ -52,37 +53,44 @@ ___
 
 ### Python
 Before installing the package, you need to make sure that you have Python version 3.8 or higher installed:
+
 ```bash
-# Windows, Ubuntu, Mac OS:
+# Windows, Ubuntu, MacOS:
 >> python --version # or python -V
 Python 3.8.0+
 ```
-:warning: If a command without a version does not work, specify the Python version explicitly: $ python3 --version.
+:warning: If a command without a version does not work, specify the Python version explicitly: ```python3 --version```.
 
 If you have an older version installed, update with the following commands:
+
 ```bash
 # Windows:
 >> pip install python --upgrade
 
 # Ubuntu:
->> sudo apt-get install python3.8
+>> sudo apt-get upgrade python3.X
 
-# Mac OS:
+# MacOS:
 >> brew update && brew upgrade python
+
+# * X - version number to be installed
 ```
 
-If you don't have Python installed, you can download and install it from [the official Python website](https://www.python.org/downloads/), but it's better to do this procedure through package managers. Open a terminal and run the command for your operating system:
+If you don't have Python installed, you can download and install it from [the official Python website](https://www.python.org/downloads/). If you are an Ubuntu or MacOS user, then it is better to do this procedure through package managers. Open a terminal and run the command for your operating system:
+
 ```bash
-# Windows, Linux:
+# Ubuntu:
 >> sudo apt update
 >> sudo apt install python3.X
 
-# Mac OS:
+# MacOS:
 # https://brew.sh/index_ru.html
 >> brew install python3.X
 
-# X - version number to be installed
+# * X - version number to be installed
 ```
+
+:exclamation: The configuration of assemblies of different versions of operating systems can vary greatly from each other, which makes it impossible to write a common instruction. If you're running an OS other than the above, or you're having errors after the suggested commands, search [Stack Overflow](https://stackoverflow.com/) for answers, maybe someone else has come across them before you! Setting up the environment is not easy! :slightly_smiling_face:
 
 ### Poetry
 
@@ -91,12 +99,15 @@ The project uses the Poetry manager. Poetry is a tool for dependency management 
 Poetry provides a custom installer that will install poetry isolated from the rest of your system by vendorizing its dependencies. This is the recommended way of installing poetry.
 
 ```bash
-# Windows (WSL), Linux, Mac OS:
+# Windows (WSL), Linux, MacOS:
 >> curl -sSL https://install.python-poetry.org | python3 -
 
 # Windows (Powershell):
 >> (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+# If you have installed Python through the Microsoft Store, replace "py" with "python" in the command above.
 ```
+
+:warning: On some systems, ```python``` may still refer to Python 2 instead of Python 3. The Poetry Team suggests a ```python3``` binary to avoid ambiguity.
 
 :warning: By default, Poetry is installed into a platform and user-specific directory:
 
@@ -120,23 +131,24 @@ Once Poetry is installed and in your $PATH, you can execute the following:
 
 ### Project package
 
-To work with the package, you need to clone the repository to your computer. This is done using the git clone command. Copy the contents and type on the command line:
+To work with the package, you need to clone the repository to your computer. This is done using the ```git clone``` command. Clone the project on the command line:
 
 ```bash
->> pip install --user git+https://github.com/IgorGakhov/python-project-lvl2.git
+# clone via HTTPS:
+>> git clone https://github.com/IgorGakhov/python-project-lvl2.git
 
-# If this operation passes for the first time
-# You will probably see a message like this
-The authenticity of host github.com cannot be established. RSA key fingerprint is SHA256: xxxxxxxxxxx Are you sure you want to continue connecting (yes/no/[fingerprint])? yes Warning: Permanently added github.com (RSA) to the list of known hosts.
-# Type yes and press Enter
+# clone via SSH:
+>> git clone git@github.com:IgorGakhov/python-project-lvl2.git
 ```
 
 It remains to move to the directory and install the package:
 
 ```bash
 >> cd python-project-lvl2
->> make build
->> make package-install
+>> poetry build
+>> python3 -m pip install --user dist/*.whl
+# If you have previously installed a package and want to update it, use the following command:
+# >> python3 -m pip install --user --force-reinstall dist/*.whl
 ```
 
 Finally, we can move on to using the project functionality!
@@ -222,17 +234,10 @@ The text reflects the situation, as if we have combined the second object with t
 >> gendiff --format plain filepath1.json filepath2.json
 ```
 ```bash
-Property 'common.follow' was added with value: false
-Property 'common.setting2' was removed
-Property 'common.setting3' was updated. From true to null
-Property 'common.setting4' was added with value: 'blah blah'
-Property 'common.setting5' was added with value: [complex value]
-Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
-Property 'common.setting6.ops' was added with value: 'vops'
-Property 'group1.baz' was updated. From 'bas' to 'bars'
-Property 'group1.nest' was updated. From [complex value] to 'str'
-Property 'group2' was removed
-Property 'group3' was added with value: [complex value]
+Property 'follow' was removed
+Property 'proxy' was removed
+Property 'timeout' was updated. From 50 to 20
+Property 'verbose' was added with value: true
 ```
 
 ##### Compare two flat JSON and/or YAML files: plain format
@@ -248,9 +253,11 @@ Property 'group3' was added with value: [complex value]
 JSON (JavaScript Object Notation) is a standard text format for representing structured data based on JavaScript object syntax. It is usually used to transfer data in web applications (e.g. sending some data from the server to the client so that it can be displayed on a web page or vice versa).
 
 **Example**:
+
 ```bash
 >> gendiff --format json filepath1.json filepath2.json
 ```
+
 ```bash
 {
     "follow": {
@@ -281,11 +288,11 @@ JSON (JavaScript Object Notation) is a standard text format for representing str
 
 **Node types**:
 
-* **_<span style="color:LawnGreen">"added"</span>_**: key was not present in the first file, but was present in the second file.
-* **_<span style="color:Red">"removed"</span>_**: key was present in the first file, but not present in the second file.
-* **_<span style="color:Gold">"unchanged"</span>_**: key exists in both files and its values match.
-* **_<span style="color:Blue">"updated"</span>_**: key exists in both files, but its values do not match.
-* **_<span style="color:Purple">"nested"</span>_**: similar to 'updated', but here the values are dictionaries.
+* **_<span style="color:LawnGreen">"ADDED"</span>_**: key was not present in the first file, but was present in the second file.
+* **_<span style="color:Red">"REMOVED"</span>_**: key was present in the first file, but not present in the second file.
+* **_<span style="color:Gold">"UNCHANGED"</span>_**: key exists in both files and its values match.
+* **_<span style="color:Blue">"UPDATED"</span>_**: key exists in both files, but its values do not match.
+* **_<span style="color:Purple">"NESTED"</span>_**: similar to 'updated', but here the values are dictionaries.
 
 ##### Compare two flat JSON and/or YAML files: JSON format
 
@@ -299,6 +306,13 @@ ___
 
 ## Development
 
+### Dev Dependencies
+
+List of dev-dependencies:
+- flake8 = "^4.0.1"
+- pytest = "^7.1.2"
+- pytest-cov = "^3.0.0"
+
 ### Project Organization
 
 ```bash
@@ -310,7 +324,8 @@ ___
 │   ├── file_processor
 │   │   ├── __init__.py
 │   │   ├── gendiff.py
-│   │   ├── data_parser.py
+│   │   ├── file_handler.py
+│   │   ├── data_loader.py
 │   │   └── diff_assembler.py
 │   ├── formatters
 │   │   ├── __init__.py
@@ -321,17 +336,16 @@ ___
 │   └── scripts
 │       ├── __init__.py
 │       └── run.py
+├── tests
+│   ├── fixtures
+│   │   ├── diff_requests
+│   │   └── diff_responses
+│   ├── test_cli.py
+│   └── test_gendiff.py
 ├── Makefile
-├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-├── setup.cfg
-└── tests
-    ├── fixtures
-    │   ├── diff_requests
-    │   └── diff_responses
-    ├── test_cli.py
-    └── test_gendiff.py
+└── setup.cfg
 ```
 
 ### Useful commands
@@ -356,4 +370,5 @@ The commands most used in development are listed in the Makefile:
 ___
 
 **Thank you for attention!**
+
 :man_technologist: Author: [@IgorGakhov](https://github.com/IgorGakhov)
