@@ -25,8 +25,8 @@ def load_content(content: str, data_format: str) -> Callable:
 
     Raises:
     ---
-        ValueError: Unsupported file extension.
-        RuntimeError: This file is not valid.
+        - ValueError: Unsupported file extension.
+        - RuntimeError: This file is not valid.
 
     Return:
     ---

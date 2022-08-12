@@ -28,7 +28,7 @@ def visualize_diff_tree(diff_tree: dict, format: str) -> Callable:
 
     Raises:
     ---
-        ValueError: Unsupported render format.
+        - ValueError: Unsupported render format.
 
     Return:
     ---

@@ -17,7 +17,7 @@ def explore_file(file_path: str) -> tuple:
 
     Raises:
     ---
-        RuntimeError: Failed to open file.
+        - RuntimeError: Failed to open file.
 
     Return:
     ---

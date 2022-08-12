@@ -13,7 +13,7 @@ Languages, frameworks and libraries used in the implementation of the project:
 ### Dependencies
 List of dependencies, without which the project code will not work correctly:
 - python = "^3.8"
-- PyYAML = "^6.0"
+- pyyaml = "^6.0"
 
 ## Description
 Difference Generator is a program that determines the difference between two data structures. This is a popular task for which there are many online services, for example: http://www.jsondiff.com/. A similar mechanism is used when outputting tests or when automatically tracking changes in configuration files.

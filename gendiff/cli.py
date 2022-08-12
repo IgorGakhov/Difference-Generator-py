@@ -26,11 +26,12 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('first_file')
     parser.add_argument('second_file')
 
-    parser.add_argument('-f', '--format',
-                        help='set format of output (default: stylish)',
-                        choices=FORMATS,
-                        default=DEFAULT_FORMAT
-                        )
+    parser.add_argument(
+        '-f', '--format',
+        help='set format of output (default: stylish)',
+        choices=FORMATS,
+        default=DEFAULT_FORMAT
+    )
 
     args = parser.parse_args()
 

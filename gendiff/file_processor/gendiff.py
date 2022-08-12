@@ -21,6 +21,13 @@ def generate_diff(file_path1: str, file_path2: str, format: str = DEFAULT_FORMAT
 
         - format (str): Format for comparison (default: stylish).
 
+    Raises:
+    ---
+        - ValueError: Unsupported file extension.
+        - ValueError: Unsupported render format.
+        - RuntimeError: Failed to open file.
+        - RuntimeError: This file is not valid.
+
     Return:
     ---
         Visualized Difference Tree.
